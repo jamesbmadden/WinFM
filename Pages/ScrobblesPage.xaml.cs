@@ -41,7 +41,7 @@ namespace WinFM.Pages {
 
       client.DefaultRequestHeaders.Add("User-Agent", "WinFM");
 
-      string responseJson = await client.GetStringAsync("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=jamesbmadden&format=json&api_key=" + Api.Key);
+      string responseJson = await client.GetStringAsync("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=jamesbmadden&format=json&api_key=" + Api.Key);
 
       recentScrobbles = JsonSerializer.Deserialize<RecentScrobblesResponse>(responseJson);
 
