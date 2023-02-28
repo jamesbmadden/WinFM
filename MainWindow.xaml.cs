@@ -14,6 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
@@ -22,6 +26,9 @@ using WinRT;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using WinRT.Interop;
+using System.Text.Json;
+using WinFM.Types;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,6 +43,8 @@ namespace WinFM {
     IntPtr dispatchQueue = IntPtr.Zero;
     MicaController backdropController;
     SystemBackdropConfiguration micaConfig;
+
+    UserDataResponse userData;
 
     public MainWindow() {
       this.InitializeComponent();
@@ -56,7 +65,28 @@ namespace WinFM {
         titleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
         // set button colours so they are transparent too
         titleBar.ButtonBackgroundColor = Colors.Transparent;
+        titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
       }
+
+      // load the user data 
+      LoadUserData();
+
+    }
+
+    async void LoadUserData() {
+      HttpClient client = new HttpClient();
+
+      client.DefaultRequestHeaders.Add("User-Agent", "WinFM");
+
+      string responseJson = await client.GetStringAsync("https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=jamesbmadden&format=json&api_key=" + Api.Key);
+
+      userData = JsonSerializer.Deserialize<UserDataResponse>(responseJson);
+
+      // set the profile picture and name to the loaded values
+      UserName.Text = userData.user.realname;
+      BitmapImage pfpImage = new BitmapImage();
+      pfpImage.UriSource = new Uri(userData.user.image[1].text);
+      ProfilePicture.ProfilePicture = pfpImage;
 
     }
 

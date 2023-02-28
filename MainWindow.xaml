@@ -12,7 +12,10 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
+      <!-- Columns for each part of the title bar - main part, profile section, and the control buttons -->
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition x:Name="ProfilePadding" Width="Auto" />
+      <ColumnDefinition x:Name="ButtonPadding" Width="144"/>
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="48"/>
@@ -22,13 +25,21 @@
     <Border x:Name="AppTitleBar" VerticalAlignment="Top" Grid.Row="0" Height="48">
       <TextBlock x:Name="AppTitle" Text="Last.FM" VerticalAlignment="Center" Margin="16,0,0,0" />
     </Border>
+    <!-- profile section-->
+    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+      <Border x:Name="UserNameBox" VerticalAlignment="Top" Height="48">
+        <TextBlock x:Name="UserName"  VerticalAlignment="Center" Margin="16,0,8,0" />
+      </Border>
+      <PersonPicture x:Name="ProfilePicture" ProfilePicture="{x:Bind userData.user.image[1].text}" Height="32" Margin="8" />
+    </StackPanel>
     <!-- core navigation for the app -->
     <NavigationView 
       IsBackButtonVisible="Collapsed" 
       SelectionChanged="Navigated"
       PaneDisplayMode="Top" 
       x:Name="mainNavigation" 
-      Grid.Row="1">
+      Grid.Row="1"
+      Grid.ColumnSpan="3">
       <NavigationView.MenuItems>
         <NavigationViewItem Icon="Audio" Content="Scrobbles" Tag="ScrobblesPage" />
         <NavigationViewItem Icon="Clock" Content="Reports" Tag="ReportsPage" />
