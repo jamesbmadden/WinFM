@@ -40,8 +40,8 @@ namespace WinFM {
     public MainWindow() {
       this.InitializeComponent();
 
-      // navigate to the scrobbles page on start
-      pageFrame.Navigate(typeof(Pages.ScrobblesPage));
+      // make sure the first tab (scrobbles) is selected
+      mainNavigation.SelectedItem = mainNavigation.MenuItems.OfType<NavigationViewItem>().First();
 
       // activate the mica backdrop
       setMica();
