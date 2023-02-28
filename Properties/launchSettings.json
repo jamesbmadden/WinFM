@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WinFM (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WinFM (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

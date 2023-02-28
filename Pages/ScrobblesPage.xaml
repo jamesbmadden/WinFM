@@ -1,0 +1,24 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Page
+  x:Class="WinFM.Pages.ScrobblesPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:WinFM.Pages"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d">
+
+  <!-- use grid to ensure content fills the page -->
+  <Grid>
+    <!-- loading spinner while api requests are made -->
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LoadingView">
+      <ProgressRing IsActive="True" />
+    </StackPanel>
+      <!-- What to show once content is loaded -->
+    <StackPanel x:Name="ScrobblesView" Visibility="Collapsed">
+      <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
+    </StackPanel>
+  </Grid>
+</Page>
