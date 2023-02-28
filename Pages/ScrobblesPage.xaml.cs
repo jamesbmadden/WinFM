@@ -26,5 +26,11 @@ namespace WinFM.Pages {
 
       // load the user's recent scrobbles from the lastfm api
     }
+
+    void SwitchPage (object sender, RoutedEventArgs e) {
+      // hide the loader and show the content
+      LoadingView.Visibility = Visibility.Collapsed;
+      ScrobblesView.Visibility = Visibility.Visible;
+    }
   }
 }
