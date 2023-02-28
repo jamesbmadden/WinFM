@@ -1,25 +1,48 @@
-<!-- Copyright (c) Microsoft Corporation and Contributors. -->
-<!-- Licensed under the MIT License. -->
-
 <Page
   x:Class="WinFM.Pages.ScrobblesPage"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="using:WinFM.Pages"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+  xmlns:types="using:WinFM.Types"
   mc:Ignorable="d">
+
+  <Page.Resources>
+
+    <!-- Template that each entry in the recent scrobbles list follows -->
+    <DataTemplate x:Key="RecentScrobbleTemplate" x:DataType="types:Track">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Image Source="{x:Bind image[2].text}" Grid.RowSpan="2" Width ="32" Height="32" Margin="6" />
+
+        <TextBlock Text="{x:Bind name}" Grid.Row="0" Grid.Column="1" x:Phase="1" Margin="12,6,0,0" />
+        <TextBlock Text="{x:Bind artist.text}" Style="{ThemeResource CaptionTextBlockStyle}" Grid.Row="1" Grid.Column="1" x:Phase="1" Margin="12,0,0,6" />
+
+      </Grid>
+    </DataTemplate>
+
+  </Page.Resources>
 
   <!-- use grid to ensure content fills the page -->
   <Grid>
-    <!-- loading spinner while api requests are made -->
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LoadingView">
-      <ProgressRing IsActive="True" />
-      <Button x:Name="EndLoadingButton" Click="SwitchPage">Stop Loading</Button>
-    </StackPanel>
-      <!-- What to show once content is loaded -->
-    <StackPanel x:Name="ScrobblesView" Visibility="Collapsed">
+    <StackPanel x:Name="ScrobblesView">
       <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
+
+      <!-- ListView with the most recent scrobbles from the user -->
+      <ListView
+        x:Name="RecentScrobblesList"
+        ItemTemplate="{StaticResource RecentScrobbleTemplate}"
+        HorizontalAlignment="Left"/>
+
     </StackPanel>
   </Grid>
 </Page>
