@@ -8,6 +8,8 @@
   mc:Ignorable="d">
 
   <Grid>
-    <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}"/>
+    <StackPanel>
+      <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}"/>
+    </StackPanel>
   </Grid>
 </Page>

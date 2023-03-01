@@ -41,7 +41,7 @@
       <ListView
         x:Name="RecentScrobblesList"
         ItemTemplate="{StaticResource RecentScrobbleTemplate}"
-        HorizontalAlignment="Left"/>
+        HorizontalAlignment="Left" />
 
     </StackPanel>
   </Grid>
