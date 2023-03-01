@@ -34,15 +34,17 @@
 
   <!-- use grid to ensure content fills the page -->
   <Grid>
-    <StackPanel x:Name="ScrobblesView">
-      <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
+    <ScrollViewer>
+      <StackPanel x:Name="ScrobblesView">
+        <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
 
-      <!-- ListView with the most recent scrobbles from the user -->
-      <ListView
-        x:Name="RecentScrobblesList"
-        ItemTemplate="{StaticResource RecentScrobbleTemplate}"
-        HorizontalAlignment="Left" />
+        <!-- ListView with the most recent scrobbles from the user -->
+        <ListView
+          x:Name="RecentScrobblesList"
+          ItemTemplate="{StaticResource RecentScrobbleTemplate}"
+          HorizontalAlignment="Left" />
 
-    </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
   </Grid>
 </Page>
