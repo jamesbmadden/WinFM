@@ -34,19 +34,23 @@
 
   <!-- use grid to ensure content fills the page -->
   <Grid>
-    <ScrollViewer>
-      <StackPanel x:Name="ScrobblesView">
-        <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
 
-        <!-- ListView with the most recent scrobbles from the user -->
-        <ListView
-          x:Name="RecentScrobblesList"
-          SelectionMode="None"
-          IsItemClickEnabled="True"
-          ItemTemplate="{StaticResource RecentScrobbleTemplate}"
-          HorizontalAlignment="Left" />
+    <TextBlock Text="Scrobbles" Style="{StaticResource TitleTextBlockStyle}"/>
 
-      </StackPanel>
-    </ScrollViewer>
+    <!-- ListView with the most recent scrobbles from the user -->
+    <ListView
+      x:Name="RecentScrobblesList"
+      SelectionMode="None"
+      IsItemClickEnabled="True"
+      DataFetchSize="1"
+      IncrementalLoadingThreshold="5"
+      IncrementalLoadingTrigger="Edge"
+      ItemTemplate="{StaticResource RecentScrobbleTemplate}"
+      HorizontalAlignment="Left"
+      Grid.Row="1" />
   </Grid>
 </Page>

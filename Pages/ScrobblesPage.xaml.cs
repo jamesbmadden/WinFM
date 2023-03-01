@@ -7,6 +7,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,32 +24,58 @@ using WinFM.Types;
 
 namespace WinFM.Pages {
 
-  public sealed partial class ScrobblesPage : Page {
+  // class for incrementally loading recent scrobbles from the LastFM API
+  public class RecentScrobbleLoader : ObservableCollection<Track>, ISupportIncrementalLoading {
 
-    // data that can be used for rendering the recent scrobbles
-    RecentScrobblesResponse recentScrobbles;
+    uint currentPage = 1;
+    uint scrobblesPerPage = 50;
+    uint totalPages = 1;
+    HttpClient client = new HttpClient();
+
+    public RecentScrobbleLoader() {
+      client.DefaultRequestHeaders.Add("User-Agent", "WinFM");
+    }
+
+    // check whether more can be loaded
+    public bool HasMoreItems { get { return currentPage <= totalPages; } }
+
+    // load more items
+    public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) {
+
+      return AsyncInfo.Run(async cancelToken => {
+
+        // fetch the data from the server!
+        string responseJson = await client.GetStringAsync("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=jamesbmadden&page=" + currentPage + "&format=json&api_key=" + Api.Key);
+
+        RecentScrobblesResponse recentScrobbles = JsonSerializer.Deserialize<RecentScrobblesResponse>(responseJson);
+
+        // add each track to the list
+        foreach (Track track in recentScrobbles.recenttracks.track) {
+          Add(track);
+        }
+
+        // if this is the first page, keep track of how many total pages there are
+        if (currentPage == 1) {
+          totalPages = uint.Parse(recentScrobbles.recenttracks.attr.totalPages);
+        }
+
+        // make sure the next page is loaded on the next request
+        currentPage++;
+
+        return new LoadMoreItemsResult { Count = (uint) recentScrobbles.recenttracks.track.Length };
+      });
+
+    }
+
+  }
+
+  public sealed partial class ScrobblesPage : Page {
 
     public ScrobblesPage() {
       this.InitializeComponent();
 
-      // load the user's recent scrobbles from the lastfm api
-      LoadRecentScrobbles();
-
-    }
-
-    // get the user's recent scrobbles from the last fm api
-    async void LoadRecentScrobbles() {
-      HttpClient client = new HttpClient();
-
-      client.DefaultRequestHeaders.Add("User-Agent", "WinFM");
-
-      string responseJson = await client.GetStringAsync("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=jamesbmadden&format=json&api_key=" + Api.Key);
-
-      recentScrobbles = JsonSerializer.Deserialize<RecentScrobblesResponse>(responseJson);
-
-      // now response is a proper c# object containing all the data from the API!
-      // set the list view to read from the recent scrobbles
-      RecentScrobblesList.ItemsSource = recentScrobbles.recenttracks.track;
+      // establish the source of scrobbles as the RecentScrobbleLoader class
+      RecentScrobblesList.ItemsSource = new RecentScrobbleLoader();
 
     }
   }
