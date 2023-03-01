@@ -32,6 +32,14 @@
         <TextBlock x:Name="UserName" Style="{ThemeResource CaptionTextBlockStyle}" VerticalAlignment="Center" Margin="8,0,8,0" />
         <PersonPicture x:Name="ProfilePicture" Height="32" Margin="0,0,8,0" />
       </StackPanel>
+      <!-- Menu that appears when you click on the profile button -->
+      <Button.Flyout>
+        <MenuFlyout>
+          <MenuFlyoutItem Text="Sign Out" Icon="Back"/>
+          <MenuFlyoutItem Text="View Profile" Icon="Contact"/>
+        </MenuFlyout>
+      </Button.Flyout>
+
     </Button>
     <!-- core navigation for the app -->
     <NavigationView 
