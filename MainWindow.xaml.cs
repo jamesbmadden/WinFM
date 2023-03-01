@@ -43,6 +43,7 @@ namespace WinFM {
     IntPtr dispatchQueue = IntPtr.Zero;
     MicaController backdropController;
     SystemBackdropConfiguration micaConfig;
+    AppWindow appWindow;
 
     UserDataResponse userData;
 
@@ -57,7 +58,7 @@ namespace WinFM {
       // and customize the title bar IF SUPPORTED
       IntPtr hWnd = WindowNative.GetWindowHandle(this);
       WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-      AppWindow appWindow = AppWindow.GetFromWindowId(wndId);
+      appWindow = AppWindow.GetFromWindowId(wndId);
 
       if (AppWindowTitleBar.IsCustomizationSupported()) {
         var titleBar = appWindow.TitleBar;
@@ -66,6 +67,8 @@ namespace WinFM {
         // set button colours so they are transparent too
         titleBar.ButtonBackgroundColor = Colors.Transparent;
         titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+        AppTitleBar.Loaded += SetDragAreas;
+        AppRoot.SizeChanged += SetDragAreas;
       }
 
       // load the user data 
@@ -87,6 +90,30 @@ namespace WinFM {
       BitmapImage pfpImage = new BitmapImage();
       pfpImage.UriSource = new Uri(userData.user.image[1].text);
       ProfilePicture.ProfilePicture = pfpImage;
+
+      // size of the profile button has changed, so change the drag areas on the window
+      SetDragAreas(null, null);
+
+    }
+
+    // when the custom title bar is loaded or resized, set the drag regions so the user button can be pressed
+    public void SetDragAreas (object sender, RoutedEventArgs e) {
+
+      double scale = GetScaleAdjustment();
+      ButtonPadding.Width = new GridLength(appWindow.TitleBar.RightInset / scale);
+      LeftButtonPadding.Width = new GridLength(appWindow.TitleBar.LeftInset / scale);
+
+      List<Windows.Graphics.RectInt32> dragAreas = new();
+
+      Windows.Graphics.RectInt32 dragArea;
+      dragArea.X = (int) (LeftButtonPadding.ActualWidth * scale);
+      dragArea.Y = 0;
+      dragArea.Height = (int) (AppTitleBar.ActualHeight * scale);
+      dragArea.Width = (int) (DraggableTitleBar.ActualWidth * scale);
+
+      dragAreas.Add(dragArea);
+
+      appWindow.TitleBar.SetDragRectangles(dragAreas.ToArray());
 
     }
 
@@ -130,6 +157,33 @@ namespace WinFM {
         return false;
       }
 
+    }
+
+    // code to calculate the DPI of the screen
+    [DllImport("Shcore.dll", SetLastError = true)]
+    internal static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
+
+    internal enum Monitor_DPI_Type : int {
+      MDT_Effective_DPI = 0,
+      MDT_Angular_DPI = 1,
+      MDT_Raw_DPI = 2,
+      MDT_Default = MDT_Effective_DPI
+    }
+
+    private double GetScaleAdjustment() {
+      IntPtr hWnd = WindowNative.GetWindowHandle(this);
+      WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+      DisplayArea displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
+      IntPtr hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
+
+      // Get DPI.
+      int result = GetDpiForMonitor(hMonitor, Monitor_DPI_Type.MDT_Default, out uint dpiX, out uint _);
+      if (result != 0) {
+        throw new Exception("Could not get DPI for monitor.");
+      }
+
+      uint scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
+      return scaleFactorPercent / 100.0;
     }
 
     // struct for the options for dispatch queue
