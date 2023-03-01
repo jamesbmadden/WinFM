@@ -8,8 +8,49 @@
   mc:Ignorable="d">
 
   <Grid>
-    <StackPanel>
-      <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}"/>
+    
+    <!-- Three column layout, one for artists, albums, tracks -->
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    
+    <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}" Grid.ColumnSpan="3" />
+    
+    <!-- Top artists section -->
+    <StackPanel Grid.Column="0" Grid.Row="1">
+      <TextBlock Text="Top Artists" Style="{StaticResource SubtitleTextBlockStyle}" />
+      <TextBlock x:Name="TopArtist0" />
+      <TextBlock x:Name="TopArtist1" />
+      <TextBlock x:Name="TopArtist2" />
+      <TextBlock x:Name="TopArtist3" />
+      <TextBlock x:Name="TopArtist4" />
     </StackPanel>
+
+    <!-- Top albums section -->
+    <StackPanel Grid.Column="1" Grid.Row="1">
+      <TextBlock Text="Top Albums" Style="{StaticResource SubtitleTextBlockStyle}" />
+      <TextBlock x:Name="TopAlbum0" />
+      <TextBlock x:Name="TopAlbum1" />
+      <TextBlock x:Name="TopAlbum2" />
+      <TextBlock x:Name="TopAlbum3" />
+      <TextBlock x:Name="TopAlbum4" />
+    </StackPanel>
+
+    <!-- Top artists section -->
+    <StackPanel Grid.Column="2" Grid.Row="1">
+      <TextBlock Text="Top Tracks" Style="{StaticResource SubtitleTextBlockStyle}" />
+      <TextBlock x:Name="TopTrack0" />
+      <TextBlock x:Name="TopTrack1" />
+      <TextBlock x:Name="TopTrack2" />
+      <TextBlock x:Name="TopTrack3" />
+      <TextBlock x:Name="TopTrack4" />
+    </StackPanel>
+
   </Grid>
 </Page>
