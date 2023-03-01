@@ -41,6 +41,8 @@
         <!-- ListView with the most recent scrobbles from the user -->
         <ListView
           x:Name="RecentScrobblesList"
+          SelectionMode="None"
+          IsItemClickEnabled="True"
           ItemTemplate="{StaticResource RecentScrobbleTemplate}"
           HorizontalAlignment="Left" />
 
