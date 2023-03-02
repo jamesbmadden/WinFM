@@ -124,25 +124,7 @@ namespace WinFM.Pages {
     public void setDataFields() {
 
       // set the top artists
-      TopArtist0.Text = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist[0].name;
-      TopArtist1.Text = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist[1].name;
-      TopArtist2.Text = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist[2].name;
-      TopArtist3.Text = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist[3].name;
-      TopArtist4.Text = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist[4].name;
-
-      // set the top albums
-      TopAlbum0.Text = data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album[0].name;
-      TopAlbum1.Text = data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album[1].name;
-      TopAlbum2.Text = data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album[2].name;
-      TopAlbum3.Text = data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album[3].name;
-      TopAlbum4.Text = data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album[4].name;
-
-      // set the top tracks
-      TopTrack0.Text = data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track[0].name;
-      TopTrack1.Text = data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track[1].name;
-      TopTrack2.Text = data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track[2].name;
-      TopTrack3.Text = data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track[3].name;
-      TopTrack4.Text = data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track[4].name;
+      ArtistList.ItemsSource = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist;
 
     }
 
