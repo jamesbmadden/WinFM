@@ -38,55 +38,123 @@
     </DataTemplate>
 
     <!-- Template for each album -->
+    <DataTemplate x:Key="AlbumTemplate" x:DataType="types:Album">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+          <TextBlock Text="{x:Bind attr.rank}" x:Phase="1" Margin="0,6,0,0" />
+          <TextBlock Text="." Margin="0,6,0,0" />
+        </StackPanel>
+
+        <TextBlock Text="{x:Bind name}" Grid.Row="0" Grid.Column="1" x:Phase="1" Margin="12,6,0,0" />
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+          <TextBlock Text="{x:Bind artist.text}" Style="{ThemeResource CaptionTextBlockStyle}" x:Phase="1" Margin="12,0,0,6" />
+          <TextBlock Text="-" Style="{ThemeResource CaptionTextBlockStyle}" Margin="4,0,4,6" />
+          <TextBlock Text="{x:Bind playcount}" Style="{ThemeResource CaptionTextBlockStyle}" x:Phase="1" Margin="0,0,0,6" />
+          <TextBlock Text=" Scrobbles" Style="{ThemeResource CaptionTextBlockStyle}" Margin="0,0,0,6" />
+        </StackPanel>
+
+      </Grid>
+    </DataTemplate>
+    
+    <!-- Template for each track -->
+    <DataTemplate x:Key="TrackTemplate" x:DataType="types:Track">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+          <TextBlock Text="{x:Bind attr.rank}" x:Phase="1" Margin="0,6,0,0" />
+          <TextBlock Text="." Margin="0,6,0,0" />
+        </StackPanel>
+
+        <TextBlock Text="{x:Bind name}" Grid.Row="0" Grid.Column="1" x:Phase="1" Margin="12,6,0,0" />
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+          <TextBlock Text="{x:Bind artist.text}" Style="{ThemeResource CaptionTextBlockStyle}" x:Phase="1" Margin="12,0,0,6" />
+          <TextBlock Text="-" Style="{ThemeResource CaptionTextBlockStyle}" Margin="4,0,4,6" />
+          <TextBlock Text="{x:Bind playcount}" Style="{ThemeResource CaptionTextBlockStyle}" x:Phase="1" Margin="0,0,0,6" />
+          <TextBlock Text=" Scrobbles" Style="{ThemeResource CaptionTextBlockStyle}" Margin="0,0,0,6" />
+        </StackPanel>
+
+      </Grid>
+    </DataTemplate>
+    
 
   </Page.Resources>
 
   <Grid>
     
     <!-- Three column layout, one for artists, albums, tracks -->
+    <!-- Plus two extra columns for padding on left and right -->
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="*" />
+      <ColumnDefinition MaxWidth="300" Width="100*" />
+      <ColumnDefinition MaxWidth="300" Width="100*" />
+      <ColumnDefinition MaxWidth="300" Width="100*" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     
-    <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}" Grid.ColumnSpan="3" />
+    <TextBlock Text="Reports" Style="{StaticResource TitleTextBlockStyle}" Grid.ColumnSpan="5" />
     
     <!-- Top artists section -->
-    <StackPanel Grid.Column="0" Grid.Row="1">
-      <TextBlock Text="Top Artists" Style="{StaticResource SubtitleTextBlockStyle}" />
+    <StackPanel Grid.Column="1" Grid.Row="1">
+      <TextBlock Text="Top Artists" Style="{StaticResource SubtitleTextBlockStyle}" TextAlignment="Center" />
 
       <ListView
         x:Name="ArtistList"
-        ItemTemplate="{StaticResource ArtistTemplate}"
-        Height="235" />
+        ItemTemplate="{StaticResource ArtistTemplate}" />
 
     </StackPanel>
 
     <!-- Top albums section -->
-    <StackPanel Grid.Column="1" Grid.Row="1">
-      <TextBlock Text="Top Albums" Style="{StaticResource SubtitleTextBlockStyle}" />
+    <StackPanel Grid.Column="2" Grid.Row="1">
+      <TextBlock Text="Top Albums" Style="{StaticResource SubtitleTextBlockStyle}" TextAlignment="Center" />
 
       <ListView
         x:Name="AlbumList"
-        ItemTemplate="{StaticResource ArtistTemplate}"
-        Height="235" />
+        ItemTemplate="{StaticResource AlbumTemplate}" />
 
     </StackPanel>
 
-    <!-- Top artists section -->
-    <StackPanel Grid.Column="2" Grid.Row="1">
-      <TextBlock Text="Top Tracks" Style="{StaticResource SubtitleTextBlockStyle}" />
+    <!-- Top tracks section -->
+    <StackPanel Grid.Column="3" Grid.Row="1">
+      <TextBlock Text="Top Tracks" Style="{StaticResource SubtitleTextBlockStyle}" TextAlignment="Center" />
 
       <ListView
         x:Name="TrackList"
-        ItemTemplate="{StaticResource ArtistTemplate}"
-        Height="235" />
+        ItemTemplate="{StaticResource TrackTemplate}" />
 
+    </StackPanel>
+
+    <!-- Highlights of the week -->
+    <TextBlock Text="Highlights" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2"  Grid.ColumnSpan="5" TextAlignment="Center" />
+
+    <!-- average daily scrobbles -->
+    <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Vertical">
+      <TextBlock Text="Average Daily Scrobbles" Style="{StaticResource SubtitleTextBlockStyle}" />
+      <TextBlock x:Name="AvgDailyScrobblesBox" Style="{StaticResource BodyTextBlockStyle}" />
     </StackPanel>
 
   </Grid>

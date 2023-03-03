@@ -18,7 +18,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using WinFM.Types;
 using WinFM.Types.Reports;
 
 namespace WinFM.Pages {
@@ -90,6 +89,25 @@ namespace WinFM.Pages {
 
     }
 
+    // calculate how many scrobbles happened in a week
+    public async Task<int> ScrobblesInWeek(int weekStart) {
+
+      int totalScrobbles = 0;
+
+      // get the week
+      (ArtistChartResponse artistWeek, AlbumChartResponse _, TrackChartResponse _) = await GetWeek(weekStart);
+
+      // for each artist, add the playcount to total scrobbles!
+      foreach (Artist artist in artistWeek.weeklyartistchart.artist) {
+
+        totalScrobbles += int.Parse(artist.playcount);
+
+      }
+
+      return totalScrobbles;
+
+    }
+
   }
   
   public sealed partial class ReportsPage : Page {
@@ -116,15 +134,48 @@ namespace WinFM.Pages {
       // now load the current week!
       await data.GetWeek(currentWeek);
       // then set the fields
-      setDataFields();
+      await setDataFields();
+     
 
     }
 
     // set the data
-    public void setDataFields() {
+    public async Task setDataFields() {
 
       // set the top artists
-      ArtistList.ItemsSource = data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist;
+      Artist[] topArtists = new Artist[5];
+      Array.Copy(
+        data.artistCharts.GetValueOrDefault(currentWeek).weeklyartistchart.artist, // source array
+        0, // start index in source
+        topArtists, // destination array
+        0, // start index in destination
+        5 // length to copy
+      );
+      ArtistList.ItemsSource = topArtists;
+
+      // same process, set top albums
+      Album[] topAlbums = new Album[5];
+      Array.Copy(
+        data.albumCharts.GetValueOrDefault(currentWeek).weeklyalbumchart.album, // source array
+        0, // start index in source
+        topAlbums, // destination array
+        0, // start index in destination
+        5 // length to copy
+      );
+      AlbumList.ItemsSource = topAlbums;
+
+      // finally, set top tracks
+      Track[] topTracks = new Track[5];
+      Array.Copy(
+        data.trackCharts.GetValueOrDefault(currentWeek).weeklytrackchart.track, // source array
+        0, // start index in source
+        topTracks, // destination array
+        0, // start index in destination
+        5 // length to copy
+      );
+      TrackList.ItemsSource = topTracks;
+
+      AvgDailyScrobblesBox.Text = ((await data.ScrobblesInWeek(currentWeek)) / 7).ToString();
 
     }
 
